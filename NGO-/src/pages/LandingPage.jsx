@@ -12,9 +12,38 @@ import {
     Heart, Users, Calendar, MapPin, CheckCircle, Clock, Search, Filter,
     Menu, X, Bell, LogOut, ChevronRight, Download, QrCode, Plus, Edit,
     Trash2, Shield, User, FileText, Settings, Award, ArrowRight, Activity,
-    Mail, Phone, Info, LayoutDashboard, CheckSquare, Map, ClipboardList, DownloadCloud, Check
+    Mail, Phone, Info, LayoutDashboard, CheckSquare, Map, ClipboardList, DownloadCloud, Check,MessageCircle,
 } from 'lucide-react';
+import { FaInstagram } from "react-icons/fa";
 
+const getEventImage = (category) => {
+  switch (category?.toLowerCase()) {
+    case "education":
+      return "/images/education.png";
+
+    case "medical":
+      return "/images/health.png";
+
+    case "environment":
+      return "/images/environment.png";
+
+    case "community":
+      return "/images/community.svg";
+
+       case "food donation":
+      return "/images/food donation.png";
+
+      case "women empowerment":
+      return "/images/women empowerment.png";
+
+       case "animal welfare":
+      return "/images/animal welfare.png";
+
+
+    default:
+      return "/images/default.png";
+  }
+};
 
 const LandingPage = ({ navigate, onRegisterClick }) => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -86,9 +115,18 @@ const LandingPage = ({ navigate, onRegisterClick }) => {
                         <Button onClick={() => navigate('auth')} className="w-full sm:w-auto px-8 py-4 text-lg rounded-full">
                             Become a Volunteer <ArrowRight className="ml-2" size={20} />
                         </Button>
-                        <Button variant="outline" className="w-full sm:w-auto px-8 py-4 text-lg rounded-full bg-white/50 backdrop-blur-sm">
-                            Explore Events
-                        </Button>
+                       <Button
+    variant="outline"
+    onClick={() =>
+        document
+            .getElementById("events")
+            ?.scrollIntoView({
+                behavior: "smooth",
+            })
+    }
+>
+    Explore Events
+</Button>
                     </div>
                 </div>
             </section>
@@ -237,16 +275,19 @@ const LandingPage = ({ navigate, onRegisterClick }) => {
                             <h2 className="text-3xl font-bold text-gray-900 mb-4">Upcoming Events</h2>
                             <p className="text-gray-500">Join our upcoming initiatives and start contributing.</p>
                         </div>
-                        <Button variant="ghost" className="hidden md:flex text-[#FF8C42]">
-                            View All Events <ChevronRight size={18} />
-                        </Button>
+                      
+    
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {events.slice(0, 3).map(event => (
                             <Card key={event._id} hover className="flex flex-col h-full">
                                 <div className="h-48 w-full relative overflow-hidden group">
-                                    <img src={event.image?.url || "/placeholder.jpg"} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                    <img
+    src={event.image?.url || getEventImage(event.category)}
+    alt={event.title}
+    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+/>
                                     <div className="absolute top-4 right-4">
                                         <Badge type={event.status === 'Upcoming' ? 'success' : 'warning'}>{event.status}</Badge>
                                     </div>
@@ -269,7 +310,7 @@ const LandingPage = ({ navigate, onRegisterClick }) => {
                                             </div>
                                             <div>
                                                 <p className="text-xs text-gray-400 mb-1">Participants</p>
-                                                <p className="font-semibold text-gray-800">{event.participantsReg}</p>
+                                                <p className="font-semibold text-gray-800">{event.participantsRegistered}</p>
                                             </div>
                                             <div className="col-span-2">
                                                 <p className="text-xs text-gray-400 mb-1">Remaining Capacity</p>
@@ -280,19 +321,118 @@ const LandingPage = ({ navigate, onRegisterClick }) => {
                                         </div>
                                     </div>
                                     <Button
-                                        className="w-full"
-                                        onClick={() => onRegisterClick(event)}
-                                        disabled={event.status === 'Full'}
-                                        variant={event.status === 'Full' ? 'ghost' : 'primary'}
-                                    >
-                                        {event.status === 'Full' ? 'Registration Closed' : 'Register Now'}
-                                    </Button>
+    className="w-full"
+    onClick={() => navigate("auth")}
+>
+    Sign Up / Login to Participate
+</Button>
                                 </div>
                             </Card>
                         ))}
                     </div>
+
+                    <div className="text-center mt-12">
+    <h3 className="text-2xl font-bold text-gray-900 mb-3">
+        Want to Make a Difference?
+    </h3>
+
+    <p className="text-gray-600 max-w-2xl mx-auto mb-6">
+        Join our community to explore all upcoming events, register as a volunteer
+        or participant, track your applications, and earn certificates for your
+        contributions.
+    </p>
+
+    <Button
+        onClick={() => navigate("auth")}
+        className="px-8 py-3 rounded-full"
+    >
+        Join Our Community
+        <ArrowRight size={18} className="ml-2" />
+    </Button>
+</div>
                 </div>
             </section>
+
+
+<section className="py-20 bg-gray-50">
+  <div className="max-w-3xl mx-auto text-center px-6">
+
+    <h2 className="text-4xl font-bold text-gray-900">
+      Get in Touch
+    </h2>
+
+    <p className="text-gray-600 mt-4 mb-10">
+      Have questions or want to volunteer? We'd love to hear from you.
+    </p>
+
+    <div className="flex justify-center gap-16 flex-wrap">
+
+      {/* Email */}
+      <button
+        onClick={() =>
+          window.open(
+            "mailto:contact@ekkkadamfoundation.org",
+            "_blank"
+          )
+        }
+        className="group flex flex-col items-center"
+      >
+        <div className="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-orange-200">
+          <Mail size={28} className="text-[#FF8C42]" />
+        </div>
+
+        <span className="mt-3 font-medium text-gray-700">
+          Email
+        </span>
+      </button>
+
+      {/* WhatsApp */}
+      <button
+        onClick={() =>
+          window.open(
+            "https://wa.me/91XXXXXXXXXX",
+            "_blank"
+          )
+        }
+        className="group flex flex-col items-center"
+      >
+        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-green-200">
+          <MessageCircle size={28} className="text-green-600" />
+        </div>
+
+        <span className="mt-3 font-medium text-gray-700">
+          WhatsApp
+        </span>
+      </button>
+
+      {/* Instagram */}
+      <button
+        onClick={() =>
+          window.open(
+            "https://instagram.com/ekkkadamfoundation",
+            "_blank"
+          )
+        }
+        className="group flex flex-col items-center"
+      >
+        <div className="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-pink-200">
+          <FaInstagram size={28} className="text-pink-600" />
+        </div>
+
+        <span className="mt-3 font-medium text-gray-700">
+          Instagram
+        </span>
+      </button>
+
+    </div>
+
+  </div>
+</section>
+
+
+
+
+
 
             {/* Footer */}
             <footer id="contact" className="bg-gray-900 text-gray-300 py-12">

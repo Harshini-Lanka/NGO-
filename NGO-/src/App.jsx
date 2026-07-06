@@ -102,7 +102,7 @@ const App = () => {
 
   const volunteerMenu = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'profile', label: 'My Profile', icon: User },
+
     { id: 'events', label: 'Browse Events', icon: Calendar },
     { id: 'applications', label: 'My Applications', icon: FileText },
     { id: 'certificates', label: 'Certificates', icon: Award },
@@ -112,9 +112,9 @@ const App = () => {
     { id: 'dashboard', label: 'Overview', icon: Activity },
     { id: 'events', label: 'Event Management', icon: Calendar },
     { id: 'registrations', label: 'Registrations', icon: ClipboardList },
-    { id: 'volunteers', label: 'Volunteers', icon: Users },
-    { id: 'reports', label: 'Reports', icon: FileText },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    
+    
+    
   ];
 
   // Render logic based on view state

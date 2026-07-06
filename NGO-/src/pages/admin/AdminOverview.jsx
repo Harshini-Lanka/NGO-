@@ -1,6 +1,10 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { getDashboardStats } from "../../api/adminApi";
+import {
+  getDashboardStats,
+  getNeedsAttention,
+  getMonthlyRegistrations,
+} from "../../api/adminApi";
 
 import {
   getRecentRegistrations,
@@ -17,9 +21,9 @@ import {
   User,
   Heart,
   Plus,
-  QrCode,
+
   Award,
-  DownloadCloud,
+
 } from "lucide-react";
 
 import {
@@ -32,19 +36,15 @@ import {
   Tooltip as RechartsTooltip,
 } from "recharts";
 
-import {
-  MOCK_EVENTS,
-  MOCK_CHART_DATA,
-  MOCK_REGISTRATIONS,
-} from "../../utils/mockData";
-
 
 
 const AdminOverview = () => {
 
   const [stats, setStats] = useState(null);
-  const [events, setEvents] = useState([]);
+
   const [recentRegistrations, setRecentRegistrations] = useState([]);
+  const [needsAttention, setNeedsAttention] = useState(null);
+  const [chartData, setChartData] = useState([]);
 
 
   useEffect(() => {
@@ -73,29 +73,39 @@ const AdminOverview = () => {
 
   };
 
-  const loadStats = async () => {
-    try {
-      const res = await getDashboardStats();
+ const loadStats = async () => {
 
-      console.log(res.data);
+  try {
 
-      setStats(res.data.stats);
+    const statsRes = await getDashboardStats();
 
-    } catch (err) {
-      console.error(err);
+    setStats(statsRes.data.stats);
 
-      console.log(err.response);
-    }
-    try {
-      const res = await getEvents();
-      setEvents(res.data.events);
-    } catch (err) {
-      console.error(err);
-    }
+    const attentionRes =
+      await getNeedsAttention();
 
-  };
+    setNeedsAttention(
+      attentionRes.data.needsAttention
+    );
 
-  if (!stats) {
+    const chartRes =
+  await getMonthlyRegistrations();
+
+setChartData(
+  chartRes.data.chartData
+);
+
+  }
+
+  catch (err) {
+
+    console.error(err);
+
+  }
+
+};
+
+  if (!stats || !needsAttention) {
 
     return (
       <div className="text-center p-10">
@@ -125,20 +135,7 @@ const AdminOverview = () => {
             place. Here's what's happening today.
           </p>
 
-          <div className="flex gap-4 mt-8">
-            <Button className="bg-white text-[#FF8C42] hover:bg-orange-100 shadow-none">
-              <Plus size={18} className="mr-2" />
-              Create Event
-            </Button>
-
-            <Button
-              variant="outline"
-              className="border-white text-white hover:bg-white hover:text-[#FF8C42]"
-            >
-              <QrCode size={18} className="mr-2" />
-              Scan QR
-            </Button>
-          </div>
+          
         </div>
 
         <Calendar
@@ -243,7 +240,7 @@ const AdminOverview = () => {
       </div>
 
       {/* Analytics Section */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1">
 
         {/* Monthly Registrations */}
         <Card className="xl:col-span-2 p-6">
@@ -259,131 +256,41 @@ const AdminOverview = () => {
           </div>
 
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={MOCK_CHART_DATA}>
+            <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
               <RechartsTooltip />
 
-              <Line
-                type="monotone"
-                dataKey="volunteers"
-                stroke="#FF8C42"
-                strokeWidth={3}
-              />
+                <Line
+  type="monotone"
+  dataKey="registrations"
+  stroke="#FF8C42"
+  strokeWidth={3}
+/>
 
-              <Line
-                type="monotone"
-                dataKey="events"
-                stroke="#4CAF50"
-                strokeWidth={3}
-              />
+            
             </LineChart>
           </ResponsiveContainer>
         </Card>
 
-        {/* Quick Actions */}
-        <Card className="p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">
-            Quick Actions
-          </h3>
 
-          <div className="space-y-4">
-
-            <Button className="w-full justify-start">
-              <Plus className="mr-3" size={18} />
-              Create Event
-            </Button>
-
-            <Button variant="outline" className="w-full justify-start">
-              <QrCode className="mr-3" size={18} />
-              Scan QR
-            </Button>
-
-            <Button variant="outline" className="w-full justify-start">
-              <Users className="mr-3" size={18} />
-              View Volunteers
-            </Button>
-
-            <Button variant="outline" className="w-full justify-start">
-              <DownloadCloud className="mr-3" size={18} />
-              Export Report
-            </Button>
-
-          </div>
-        </Card>
 
       </div>
 
 
-      {/* Upcoming Events & Recent Registrations */}
+
+
+
+
+
+      {/* Recent Registrations + Recent Activity */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-
-        {/* Upcoming Events */}
-        <Card className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-bold text-gray-900">
-              Upcoming Events
-            </h3>
-
-            <Button variant="ghost" className="text-[#FF8C42]">
-              View All
-            </Button>
-          </div>
-
-          <div className="space-y-5">
-
-            {events.slice(0, 3).map(event => (
-
-              <div
-                key={event._id}
-                className="flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-50 transition"
-              >
-
-                <img
-                  src={
-                    event.image?.url ||
-                    "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1000"
-                  }
-                  alt={event.title}
-                  className="w-20 h-20 rounded-xl object-cover"
-                />
-
-                <div className="flex-1">
-
-                  <h4 className="font-bold text-gray-900">
-                    {event.title}
-                  </h4>
-
-                  <p className="text-sm text-gray-500 mt-1">
-                    {new Date(event.date).toLocaleDateString()}
-                  </p>
-
-                  <p className="text-sm text-gray-500">
-                    {event.location}
-                  </p>
-
-                </div>
-
-                <Badge
-                  type={event.status === "Upcoming" ? "success" : "warning"}
-                >
-                  {event.status}
-                </Badge>
-
-              </div>
-
-            ))}
-
-          </div>
-        </Card>
-
 
         {/* Recent Registrations */}
         <Card className="p-6">
 
           <div className="flex justify-between items-center mb-6">
-
             <h3 className="text-xl font-bold text-gray-900">
               Recent Registrations
             </h3>
@@ -391,12 +298,11 @@ const AdminOverview = () => {
             <Button variant="ghost" className="text-[#FF8C42]">
               View All
             </Button>
-
           </div>
 
           <div className="space-y-5">
 
-            {recentRegistrations.map(reg => (
+            {recentRegistrations.map((reg) => (
 
               <div
                 key={reg._id}
@@ -404,16 +310,14 @@ const AdminOverview = () => {
               >
 
                 <div>
+  <h4 className="font-semibold text-gray-900">
+    {reg.user?.name || "Unknown User"}
+  </h4>
 
-                  <h4 className="font-semibold text-gray-900">
-                    {reg.user.name}
-                  </h4>
-
-                  <p className="text-sm text-gray-500">
-                    {reg.event.title}
-                  </p>
-
-                </div>
+  <p className="text-sm text-gray-500">
+    {reg.event?.title || "Event Deleted"}
+  </p>
+</div>
 
                 <Badge
                   type={
@@ -435,107 +339,86 @@ const AdminOverview = () => {
 
         </Card>
 
+        {/* Recent Activity */}
+        <Card className="p-6">
+
+  <div className="mb-6">
+
+    <h3 className="text-xl font-bold">
+      Needs Attention
+    </h3>
+
+    <p className="text-gray-500 text-sm">
+      Things requiring your attention
+    </p>
+
+  </div>
+
+  <div className="space-y-5">
+
+    <div className="flex justify-between items-center">
+
+      <span className="font-medium">
+        Pending Registrations
+      </span>
+
+      <Badge type="warning">
+        {needsAttention.pendingRegistrations}
+      </Badge>
+
+    </div>
+
+    {needsAttention.upcomingEvents.map(event => (
+
+      <div
+        key={event._id}
+        className="border-t pt-3"
+      >
+
+        <p className="font-semibold">
+          {event.title}
+        </p>
+
+        <p className="text-sm text-gray-500">
+          Upcoming Event
+        </p>
+
+      </div>
+
+    ))}
+
+    {needsAttention.almostFullEvents.map(event => (
+
+      <div
+        key={event._id}
+        className="border-t pt-3"
+      >
+
+        <p className="font-semibold">
+          {event.title}
+        </p>
+
+        <p className="text-sm text-orange-500">
+          Volunteer slots almost full
+        </p>
+
+      </div>
+
+    ))}
+
+  </div>
+
+</Card>
+
+
+
+
+
       </div>
 
 
 
-      {/* Recent Activity */}
-      <Card className="p-6">
-
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h3 className="text-xl font-bold text-gray-900">
-              Recent Activity
-            </h3>
-
-            <p className="text-sm text-gray-500">
-              Latest actions across the platform
-            </p>
-          </div>
-        </div>
-
-        <div className="space-y-6">
-
-          <div className="flex items-start gap-4">
-
-            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-              <Users className="text-green-600" size={18} />
-            </div>
-
-            <div className="flex-1">
-              <p className="font-semibold text-gray-900">
-                Rahul Sharma registered as Volunteer
-              </p>
-
-              <p className="text-sm text-gray-500">
-                Mega Food Drive • 5 minutes ago
-              </p>
-            </div>
-
-          </div>
-
-
-          <div className="flex items-start gap-4">
-
-            <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
-              <Calendar className="text-[#FF8C42]" size={18} />
-            </div>
-
-            <div className="flex-1">
-              <p className="font-semibold text-gray-900">
-                New Event Created
-              </p>
-
-              <p className="text-sm text-gray-500">
-                Blood Donation Camp • 20 minutes ago
-              </p>
-            </div>
-
-          </div>
-
-
-          <div className="flex items-start gap-4">
-
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-              <QrCode className="text-blue-600" size={18} />
-            </div>
-
-            <div className="flex-1">
-              <p className="font-semibold text-gray-900">
-                QR Check-in Successful
-              </p>
-
-              <p className="text-sm text-gray-500">
-                Alice Smith checked in • 1 hour ago
-              </p>
-            </div>
-
-          </div>
-
-
-          <div className="flex items-start gap-4">
-
-            <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
-              <Award className="text-purple-600" size={18} />
-            </div>
-
-            <div className="flex-1">
-              <p className="font-semibold text-gray-900">
-                Certificate Generated
-              </p>
-
-              <p className="text-sm text-gray-500">
-                Volunteer Completion Certificate
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-
-      </Card>
-
-    </div>
+    </div >
   );
 };
 

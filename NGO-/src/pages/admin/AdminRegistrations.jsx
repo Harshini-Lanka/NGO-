@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import * as XLSX from "xlsx";
 import {
   getRegistrations,
   updateRegistrationStatus,
@@ -79,7 +79,42 @@ const AdminRegistrations = ({ showToast }) => {
       );
     }
   };
+const exportToExcel = () => {
 
+  const data = registrations.map((reg) => ({
+  "Ticket ID": reg.ticketId,
+  Name: reg.user?.name || "Unknown User",
+  Email: reg.user.email,
+  Phone: reg.user.phone,
+  Event:reg.event?.title || "Event Deleted",
+  Role: reg.role,
+  People: reg.peopleCount,
+  Status: reg.status,
+  Attendance: reg.attendanceStatus || "Pending",
+  "Emergency Contact": reg.emergencyContact || "-",
+  Notes: reg.notes || "-",
+}));
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+
+  const workbook = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    "Registrations"
+  );
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  XLSX.writeFile(
+    workbook,
+    `Registrations-${today}.xlsx`
+  );
+
+  showToast("Excel exported successfully!", "success");
+
+};
   useEffect(() => {
     loadRegistrations();
   }, []);
@@ -100,7 +135,7 @@ const AdminRegistrations = ({ showToast }) => {
             <option value="Participant">Participant</option>
             <option value="Volunteer">Volunteer</option>
           </select>
-          <Button variant="outline" className="bg-white" onClick={() => showToast('Exporting to Excel...', 'info')}><DownloadCloud size={18} className="mr-2" /> Export</Button>
+          <Button variant="outline" className="bg-white" onClick={exportToExcel}><DownloadCloud size={18} className="mr-2" /> Export</Button>
         </div>
       </div>
 
@@ -130,17 +165,17 @@ const AdminRegistrations = ({ showToast }) => {
                     const matchesSearch =
                       reg.user.name.toLowerCase().includes(query) ||
                       reg.ticketId.toLowerCase().includes(query) ||
-                      reg.event.title.toLowerCase().includes(query);
+                      (reg.event?.title || "").toLowerCase().includes(query)
 
                     return matchesRole && matchesSearch;
                   })
                   .map(reg => (
                     <tr key={reg._id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                       <td className="p-4">
-                        <div className="font-bold text-gray-900">{reg.user.name}</div>
+                        <div className="font-bold text-gray-900">{reg.user?.name || "Unknown User"}</div>
                         <div className="text-xs text-gray-500 font-mono mt-0.5">{reg.ticketId}</div>
                       </td>
-                      <td className="p-4 text-gray-600 font-medium">{reg.event.title}</td>
+                      <td className="p-4 text-gray-600 font-medium">{reg.event?.title || "Event Deleted"}</td>
                       <td className="p-4">
                         <div className="flex items-center gap-1.5 mb-0.5">
                           {reg.role === "volunteer" ? (

@@ -192,76 +192,89 @@ const AdminEvents = () => {
             </div>
             <div className="grid gap-4">
 
-                {events.map(event => (
+                {events.map(event => (<Card
+  key={event._id}
+  className="p-6 rounded-3xl shadow-sm hover:shadow-lg transition-all"
+>
+  <div className="flex items-center justify-between">
 
-                    <Card key={event._id}>
+    {/* Left Side */}
+    <div className="space-y-3">
 
-                        <div className="p-5 flex justify-between">
+      <div className="flex items-center gap-3">
 
-                            <div>
+        <h2 className="text-2xl font-bold text-gray-900">
+          {event.title}
+        </h2>
 
-                                <h2 className="font-bold text-xl">
+        <Badge type="primary">
+          {event.category}
+        </Badge>
 
-                                    {event.title}
+      </div>
 
-                                </h2>
+      <div className="flex items-center gap-6 text-gray-600 text-sm">
 
-                                <p>{event.category}</p>
+        <div className="flex items-center gap-2">
+          <MapPin size={16} />
+          {event.location}
+        </div>
 
-                                <p>{event.location}</p>
+        <div className="flex items-center gap-2">
+          <Calendar size={16} />
+          {new Date(event.date).toLocaleDateString()}
+        </div>
 
-                                <p>
+      </div>
 
-                                    {new Date(event.date).toLocaleDateString()}
+      <p className="text-gray-500 max-w-3xl">
+        {event.description}
+      </p>
 
-                                </p>
+    </div>
 
-                            </div>
+    {/* Right Side */}
+    <div className="flex items-center gap-3">
 
-                            <div className="flex gap-2">
+      <Button
+        variant="outline"
+        onClick={() => handleEdit(event)}
+        className="border-[#FF8C42] text-[#FF8C42] hover:bg-[#FF8C42] hover:text-white px-5"
+      >
+        <Edit size={16} className="mr-2" />
+        Edit
+      </Button>
 
-                                <Button
-                                    variant="outline"
-                                    onClick={() => handleEdit(event)}
-                                >
+      <Button
+        onClick={() => handleDelete(event._id)}
+        className="bg-red-500 hover:bg-red-600 text-white px-5"
+      >
+        <Trash2 size={16} className="mr-2" />
+        Delete
+      </Button>
 
-                                    Edit
+      {event.status !== "Completed" ? (
 
-                                </Button>
+        <Button
+          onClick={() => handleComplete(event._id)}
+          className="bg-green-600 hover:bg-green-700 text-white px-5"
+        >
+          Complete
+        </Button>
 
-                                <Button
-                                    variant="danger"
-                                    onClick={() => handleDelete(event._id)}
-                                >
+      ) : (
 
-                                    Delete
+        <Badge type="success">
+          ✓ Completed
+        </Badge>
 
-                                </Button>
+      )}
 
-                                {event.status !== "Completed" ? (
+    </div>
 
-                                    <Button
-                                        variant="secondary"
-                                        onClick={() =>
-                                            handleComplete(event._id)
-                                        }
-                                    >
-                                        Mark Complete
-                                    </Button>
+  </div>
+</Card>
 
-                                ) : (
-
-                                    <Badge type="success">
-                                        Completed
-                                    </Badge>
-
-                                )}
-
-                            </div>
-
-                        </div>
-
-                    </Card>
 
                 ))}
 

@@ -15,6 +15,36 @@ import {
 import { getEvents } from "../../api/eventApi";
 
 
+const getEventImage = (category) => {
+  switch (category?.toLowerCase()) {
+    case "education":
+      return "/images/education.png";
+
+    case "medical":
+      return "/images/health.png";
+
+    case "environment":
+      return "/images/environment.png";
+
+    case "community":
+      return "/images/community.svg";
+
+       case "food donation":
+      return "/images/food donation.png";
+
+      case "women empowerment":
+      return "/images/women empowerment.png";
+
+       case "animal welfare":
+      return "/images/animal welfare.png";
+
+
+    default:
+      return "/images/default.png";
+  }
+};
+
+
 const VolunteerEvents = ({ showToast, onRegisterClick }) => {
 
   const [events, setEvents] = useState([]);
@@ -47,8 +77,11 @@ const VolunteerEvents = ({ showToast, onRegisterClick }) => {
         {events.map(event => (
           <Card key={event._id} hover className="flex flex-col">
             <div className="h-40 w-full relative">
-              <img src={event.image?.url ||
-                "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1000"} alt={event.title} className="w-full h-full object-cover" />
+              <img
+                src={getEventImage(event.category)}
+                alt={event.title}
+                className="w-full h-full object-cover"
+              />
               <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-lg text-xs font-bold text-gray-700 shadow-sm">
                 {new Date(event.date).toLocaleDateString()}
               </div>
@@ -99,4 +132,7 @@ const VolunteerEvents = ({ showToast, onRegisterClick }) => {
     </div>
   );
 };
+
+
+
 export default VolunteerEvents;

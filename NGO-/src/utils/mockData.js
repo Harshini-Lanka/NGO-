@@ -17,10 +17,10 @@ const MOCK_EVENTS = [
 ];
 
 const MOCK_STATS = [
-  { label: 'Volunteers', value: 5000, suffix: '+', icon: Users, color: 'text-blue-500', bg: 'bg-blue-100' },
-  { label: 'Events Organized', value: 450, suffix: '+', icon: Calendar, color: 'text-[#FF8C42]', bg: 'bg-[#FF8C42]/20' },
-  { label: 'Meals Distributed', value: 1000000, suffix: '+', icon: Heart, color: 'text-red-500', bg: 'bg-red-100' },
-  { label: 'Communities Served', value: 120, suffix: '+', icon: MapPin, color: 'text-[#4CAF50]', bg: 'bg-[#4CAF50]/20' },
+  { label: 'Volunteers', value: 200, suffix: '+', icon: Users, color: 'text-blue-500', bg: 'bg-blue-100' },
+  { label: 'Events Organized', value: 150, suffix: '+', icon: Calendar, color: 'text-[#FF8C42]', bg: 'bg-[#FF8C42]/20' },
+  { label: 'Meals Distributed', value: 8000, suffix: '+', icon: Heart, color: 'text-red-500', bg: 'bg-red-100' },
+  { label: 'Communities Served', value: 35, suffix: '+', icon: MapPin, color: 'text-[#4CAF50]', bg: 'bg-[#4CAF50]/20' },
 ];
 const MOCK_REGISTRATIONS = [
   { id: 'REG-8472', name: 'Alice Smith', email: 'alice@example.com', phone: '+91 9876543210', event: 'Mega Food Drive', type: 'Participant', peopleCount: 2, status: 'Confirmed', date: '2026-06-28' },
