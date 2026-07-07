@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 
 import { getEvents } from "../../api/eventApi";
+import { getMyRegistrations } from "../../api/registrationApi";
+import EventRegistrationModal from "./EventRegistrationModal";
 
 
 const getEventImage = (category) => {
@@ -29,13 +31,13 @@ const getEventImage = (category) => {
     case "community":
       return "/images/community.svg";
 
-       case "food donation":
+    case "food donation":
       return "/images/food donation.png";
 
-      case "women empowerment":
+    case "women empowerment":
       return "/images/women empowerment.png";
 
-       case "animal welfare":
+    case "animal welfare":
       return "/images/animal welfare.png";
 
 
@@ -48,6 +50,8 @@ const getEventImage = (category) => {
 const VolunteerEvents = ({ showToast, onRegisterClick }) => {
 
   const [events, setEvents] = useState([]);
+  const [registeredEvents, setRegisteredEvents] = useState([]);
+  const [registeringEvent, setRegisteringEvent] = useState(null);
 
   const loadEvents = async () => {
     try {
@@ -57,11 +61,30 @@ const VolunteerEvents = ({ showToast, onRegisterClick }) => {
       console.error(err);
     }
   };
+  const loadMyRegistrations = async () => {
+    try {
+
+      const res = await getMyRegistrations();
+
+      console.log(res.data.registrations);
+
+      const registeredIds = res.data.registrations
+        .filter((reg) => reg.event !== null)
+        .map((reg) => reg.event._id);
+
+      setRegisteredEvents(registeredIds);
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     loadEvents();
+    loadMyRegistrations();
   }, []);
   return (
+    <>
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between gap-4">
         <div className="relative flex-1 max-w-md">
@@ -119,17 +142,41 @@ const VolunteerEvents = ({ showToast, onRegisterClick }) => {
               </div>
               <Button
                 className="w-full"
-                variant={event.status === 'Full' ? 'ghost' : 'primary'}
-                disabled={event.status === 'Full'}
-                onClick={() => onRegisterClick(event)}
-              >
-                {event.status === 'Full' ? 'Registration Closed' : 'Register'}
+                variant={
+                  registeredEvents.includes(event._id)
+                    ? "success"
+                    : event.status === "Full"
+                      ? "ghost"
+                      : "primary"
+                }
+                disabled={
+                  event.status === "Full" ||
+                  registeredEvents.includes(event._id)
+                }
+                onClick={() => setRegisteringEvent(event)}              >
+                {registeredEvents.includes(event._id)
+                  ? "✓ Registered"
+                  : event.status === "Full"
+                    ? "Registration Closed"
+                    : "Register"}
               </Button>
             </div>
           </Card>
         ))}
       </div>
     </div>
+    {
+    registeringEvent && (
+      <EventRegistrationModal
+        event={registeringEvent}
+        onClose={() => setRegisteringEvent(null)}
+        onRegistrationSuccess={(eventId) => {
+          setRegisteredEvents((prev) => [...prev, eventId]);
+        }}
+      />
+    )
+  }
+  </>
   );
 };
 

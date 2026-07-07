@@ -145,7 +145,7 @@ const App = () => {
       content = (
         <DashboardLayout user={user} logout={logout} menuItems={volunteerMenu} activeTab={activeTab} setActiveTab={setActiveTab}>
           {activeTab === 'dashboard' && <VolunteerOverview navigateTab={setActiveTab} user={user} />}
-          {activeTab === 'events' && <VolunteerEvents showToast={showToast} onRegisterClick={setRegisteringEvent} />}
+          {activeTab === 'events' && <VolunteerEvents showToast={showToast} />}
           {activeTab === 'applications' && <VolunteerApplications />}
           {activeTab === 'certificates' && <VolunteerCertificates showToast={showToast} />}
           {(activeTab === 'profile') && (
@@ -194,7 +194,6 @@ const App = () => {
         .animation-delay-2000 { animation-delay: 2s; }
       `}} />
       {content}
-      {registeringEvent && <EventRegistrationModal event={registeringEvent} onClose={() => setRegisteringEvent(null)} />}
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </>
   );

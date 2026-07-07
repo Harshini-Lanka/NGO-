@@ -15,7 +15,11 @@ import {
 } from "lucide-react";
 
 
-const EventRegistrationModal = ({ event, onClose }) => {
+const EventRegistrationModal = ({
+  event,
+  onClose,
+  onRegistrationSuccess,
+}) => {
   const [step, setStep] = useState('form');
   const [regId, setRegId] = useState('');
   const [formData, setFormData] = useState({
@@ -40,6 +44,7 @@ const EventRegistrationModal = ({ event, onClose }) => {
       setRegId(registration._id);
       setTicketId(registration.ticketId);
       setQrCode(registration.qrCode);
+      onRegistrationSuccess?.(event._id);
 
       setStep("success");
     } catch (err) {

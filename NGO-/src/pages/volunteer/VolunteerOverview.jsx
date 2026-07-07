@@ -23,7 +23,7 @@ import { getMyRegistrations } from "../../api/registrationApi";
 const VolunteerOverview = ({ navigateTab, user }) => {
 
   const [stats, setStats] = useState(null);
-  const [nextEvent, setNextEvent] = useState(null);
+  const [myEvents, setMyEvents] = useState([]);
 
   const loadDashboard = async () => {
 
@@ -35,13 +35,15 @@ const VolunteerOverview = ({ navigateTab, user }) => {
 
       const regRes = await getMyRegistrations();
 
-      const approved = regRes.data.registrations.find(
-        reg => reg.status === "Approved"
-      );
+      const approvedEvents = regRes.data.registrations
+        .filter(
+          reg =>
+            reg.status === "Approved" &&
+            reg.event
+        )
+        .map(reg => reg.event);
 
-      if (approved) {
-        setNextEvent(approved.event);
-      }
+      setMyEvents(approvedEvents);
 
     } catch (err) {
 
@@ -74,9 +76,6 @@ const VolunteerOverview = ({ navigateTab, user }) => {
         <div className="relative z-10">
           <h2 className="text-3xl font-bold mb-2">Hello, {user.name}! 👋</h2>
           <p className="text-orange-50 max-w-xl">Ready to make a difference today? You have 1 upcoming event this week. Your dedication is inspiring!</p>
-          <Button variant="secondary" className="mt-6 bg-white text-[#FF8C42] hover:bg-orange-50 shadow-none" onClick={() => navigateTab('events')}>
-            Find More Events
-          </Button>
         </div>
         <Heart className="absolute -right-4 -bottom-4 text-white/10 w-48 h-48 transform -rotate-12" />
       </Card>
@@ -98,34 +97,75 @@ const VolunteerOverview = ({ navigateTab, user }) => {
       </div>
 
       {/* Next Event */}
-      {nextEvent && (
-      <div>
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Your Next Event</h3>
-        <Card className="p-1 border-l-4 border-l-[#4CAF50]">
-          <div className="flex flex-col md:flex-row gap-6 p-5">
-            <img src={
-              nextEvent.image?.url ||
-              "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1000"
-            } className="w-full md:w-48 h-32 object-cover rounded-xl" alt="Event" />
-            <div className="flex-1 flex flex-col justify-between">
-              <div>
-                <div className="flex justify-between items-start">
-                  <h4 className="text-xl font-bold text-gray-900">{nextEvent.title}</h4>
-                  <Badge type="success">Approved</Badge>
+      {myEvents.length > 0 && (
+        <div>
+          <h3 className="text-xl font-bold text-gray-900 mb-4">My Upcoming Events</h3>
+          <div className="space-y-4">
+            {myEvents.map((event) => (
+              <Card
+                key={event._id}
+                className="p-1 border-l-4 border-l-[#4CAF50]"
+              >
+                <div className="flex flex-col md:flex-row gap-6 p-5">
+
+                  <img
+                    src={
+                      event.image?.url ||
+                      "/images/default.png"
+                    }
+                    className="w-full md:w-48 h-32 object-cover rounded-xl"
+                    alt={event.title}
+                  />
+
+                  <div className="flex-1 flex flex-col justify-between">
+
+                    <div>
+                      <div className="flex justify-between items-start">
+
+                        <h4 className="text-xl font-bold text-gray-900">
+                          {event.title}
+                        </h4>
+
+                        <Badge type="success">
+                          Approved
+                        </Badge>
+
+                      </div>
+
+                      <p className="text-gray-500 text-sm mt-1 flex items-center gap-2">
+                        <MapPin size={16} />
+                        {event.location}
+                      </p>
+
+                    </div>
+
+                    <div className="flex gap-4 text-sm font-medium text-gray-600 mt-4">
+
+                      <span className="flex items-center gap-1">
+                        <Calendar
+                          size={16}
+                          className="text-[#FF8C42]"
+                        />
+                        {new Date(event.date).toLocaleDateString()}
+                      </span>
+
+                      <span className="flex items-center gap-1">
+                        <Clock
+                          size={16}
+                          className="text-[#FF8C42]"
+                        />
+                        {event.time}
+                      </span>
+
+                    </div>
+
+                  </div>
+
                 </div>
-                <p className="text-gray-500 text-sm mt-1 flex items-center gap-2"><MapPin size={16} /> {nextEvent.location}</p>
-              </div>
-              <div className="flex items-center justify-between mt-4">
-                <div className="flex gap-4 text-sm font-medium text-gray-600">
-                  <span className="flex items-center gap-1"><Calendar size={16} className="text-[#FF8C42]" />{new Date(nextEvent.date).toLocaleDateString()}</span>
-                  <span className="flex items-center gap-1"><Clock size={16} className="text-[#FF8C42]" /> {nextEvent.time}</span>
-                </div>
-                <Button variant="outline" className="text-sm px-4 py-1.5" onClick={() => navigateTab('applications')}>View QR Check-in</Button>
-              </div>
-            </div>
+              </Card>
+            ))}
           </div>
-        </Card>
-      </div>
+        </div>
       )}
     </div>
   );
