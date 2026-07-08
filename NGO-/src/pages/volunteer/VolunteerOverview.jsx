@@ -17,7 +17,33 @@ import { getVolunteerDashboard } from "../../api/userApi";
 import { getMyRegistrations } from "../../api/registrationApi";
 
 
+const getEventImage = (category) => {
+  switch (category?.toLowerCase()) {
+    case "education":
+      return "/images/education.png";
 
+    case "medical":
+      return "/images/health.png";
+
+    case "environment":
+      return "/images/environment.png";
+
+    case "community":
+      return "/images/community.svg";
+
+    case "food donation":
+      return "/images/food donation.png";
+
+    case "women empowerment":
+      return "/images/women empowerment.png";
+
+    case "animal welfare":
+      return "/images/animal welfare.png";
+
+    default:
+      return "/images/default.png";
+  }
+};
 
 
 const VolunteerOverview = ({ navigateTab, user }) => {
@@ -108,14 +134,11 @@ const VolunteerOverview = ({ navigateTab, user }) => {
               >
                 <div className="flex flex-col md:flex-row gap-6 p-5">
 
-                  <img
-                    src={
-                      event.image?.url ||
-                      "/images/default.png"
-                    }
-                    className="w-full md:w-48 h-32 object-cover rounded-xl"
-                    alt={event.title}
-                  />
+                <img
+  src={getEventImage(event.category)}
+  className="w-full md:w-48 h-32 object-cover rounded-xl"
+  alt={event.title}
+/>
 
                   <div className="flex-1 flex flex-col justify-between">
 

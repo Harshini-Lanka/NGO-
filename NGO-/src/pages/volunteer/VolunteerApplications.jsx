@@ -2,8 +2,14 @@ import React, { useEffect, useState } from "react";
 import Card from "../../components/Card";
 import Badge from "../../components/Badge";
 import Button from "../../components/Button";
+import {
+  Calendar,
+  MapPin,
+  CheckCircle,
+  Clock3,
+  XCircle,
+} from "lucide-react";
 
-import { Calendar, MapPin } from "lucide-react";
 
 import { getMyRegistrations } from "../../api/registrationApi";
 
@@ -68,24 +74,77 @@ const VolunteerApplications = () => {
                     <MapPin size={16}/>
                     {app.event.location}
                   </div>
+<div className="mt-4 grid grid-cols-2 gap-4 text-sm">
 
-                  <div className="mt-3 font-mono text-sm">
-                    Ticket : {app.ticketId}
-                  </div>
+  <div>
+    <p className="text-gray-500">
+      Ticket ID
+    </p>
+    <p className="font-mono font-semibold">
+      {app.ticketId}
+    </p>
+  </div>
+
+  <div>
+    <p className="text-gray-500">
+      Role
+    </p>
+    <p className="font-semibold capitalize">
+      {app.role}
+    </p>
+  </div>
+
+</div>
+                 
+
+                 <div className="mt-3 flex items-center gap-2">
+  <span className="text-gray-500 font-medium">
+    Attendance:
+  </span>
+
+  <Badge
+    type={
+      app.attendanceStatus === "Present"
+        ? "success"
+        : app.attendanceStatus === "Absent"
+        ? "danger"
+        : "warning"
+    }
+  >
+    {app.attendanceStatus}
+  </Badge>
+</div>
+                 <div className="mt-3 text-sm text-gray-500">
+  Applied on{" "}
+  {new Date(app.createdAt).toLocaleDateString()}
+</div>
+
+
 
                 </div>
 
-                <Badge
-                  type={
-                    app.status==="Approved"
-                    ?"success"
-                    :app.status==="Pending"
-                    ?"warning"
-                    :"danger"
-                  }
-                >
-                  {app.status}
-                </Badge>
+                <div>
+  {app.status === "Approved" && (
+    <div className="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full font-semibold text-sm">
+      <CheckCircle size={16} />
+      Approved
+    </div>
+  )}
+
+  {app.status === "Pending" && (
+    <div className="flex items-center gap-2 bg-amber-100 text-amber-700 px-4 py-2 rounded-full font-semibold text-sm">
+      <Clock3 size={16} />
+      Pending Review
+    </div>
+  )}
+
+  {app.status === "Rejected" && (
+    <div className="flex items-center gap-2 bg-red-100 text-red-700 px-4 py-2 rounded-full font-semibold text-sm">
+      <XCircle size={16} />
+      Rejected
+    </div>
+  )}
+</div>
 
               </div>
 

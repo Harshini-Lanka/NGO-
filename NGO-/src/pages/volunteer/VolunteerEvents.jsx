@@ -53,6 +53,9 @@ const VolunteerEvents = ({ showToast, onRegisterClick }) => {
   const [registeredEvents, setRegisteredEvents] = useState([]);
   const [registeringEvent, setRegisteringEvent] = useState(null);
 
+  const [search, setSearch] = useState("");
+const [category, setCategory] = useState("All");
+
   const loadEvents = async () => {
     try {
       const res = await getEvents();
@@ -89,15 +92,50 @@ const VolunteerEvents = ({ showToast, onRegisterClick }) => {
       <div className="flex flex-col md:flex-row justify-between gap-4">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-          <input type="text" placeholder="Search events by name or location..." className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#FF8C42] outline-none" />
+          <input
+  type="text"
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  placeholder="Search events by name or location..."
+  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#FF8C42] outline-none"
+/>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" className="bg-white"><Filter size={18} className="mr-2" /> Filters</Button>
-        </div>
+  <select
+    value={category}
+    onChange={(e) => setCategory(e.target.value)}
+    className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-[#FF8C42]"
+  >
+    <option value="All">All Categories</option>
+    <option value="Education">Education</option>
+    <option value="Medical">Medical</option>
+    <option value="Environment">Environment</option>
+    <option value="Community">Community</option>
+    <option value="Food Donation">Food Donation</option>
+    <option value="Women Empowerment">Women Empowerment</option>
+    <option value="Animal Welfare">Animal Welfare</option>
+  </select>
+</div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {events.map(event => (
+        {events
+  .filter((event) => {
+    const matchesSearch =
+      event.title
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+      event.location
+        .toLowerCase()
+        .includes(search.toLowerCase());
+
+    const matchesCategory =
+      category === "All" ||
+      event.category.toLowerCase() === category.toLowerCase();
+
+    return matchesSearch && matchesCategory;
+  })
+  .map((event) => (
           <Card key={event._id} hover className="flex flex-col">
             <div className="h-40 w-full relative">
               <img

@@ -15,6 +15,7 @@ import {
     Mail, Phone, Info, LayoutDashboard, CheckSquare, Map, ClipboardList, DownloadCloud, Check,MessageCircle,
 } from 'lucide-react';
 import { FaInstagram } from "react-icons/fa";
+import { FaYoutube } from "react-icons/fa";
 
 const getEventImage = (category) => {
   switch (category?.toLowerCase()) {
@@ -86,6 +87,7 @@ const LandingPage = ({ navigate, onRegisterClick }) => {
                         <a href="#about" className="hover:text-[#FF8C42] transition-colors">About</a>
                         <a href="#events" className="hover:text-[#FF8C42] transition-colors">Events</a>
                         <a href="#impact" className="hover:text-[#FF8C42] transition-colors">Impact</a>
+                        <a href="#contact" className="hover:text-[#FF8C42] transition-colors">Contact</a>
                         <Button onClick={() => navigate('auth')} variant="primary" className="px-6 rounded-full">
                             Login / Join
                         </Button>
@@ -268,7 +270,7 @@ const LandingPage = ({ navigate, onRegisterClick }) => {
             </section>
 
             {/* Featured Events */}
-            <section id="events" className="py-20 bg-slate-50">
+            <section id="events" className="pt-20 pb-10 bg-slate-50">
                 <div className="container mx-auto px-6">
                     <div className="flex justify-between items-end mb-12">
                         <div>
@@ -298,7 +300,7 @@ const LandingPage = ({ navigate, onRegisterClick }) => {
                                     </div>
                                     <h3 className="text-xl font-bold text-gray-900 mb-4">{event.title}</h3>
                                     <div className="space-y-4 mb-6 flex-1 text-gray-600 text-sm">
-                                        <div className="flex items-center gap-3"><Calendar size={18} className="text-gray-400" /> <Calendar size={18} />
+                                        <div className="flex items-center gap-3"><Calendar size={18} className="text-gray-400" /> 
 
                                             {new Date(event.date).toLocaleDateString()} at {event.time}</div>
                                         <div className="flex items-center gap-3"><MapPin size={18} className="text-gray-400" /> {event.location}</div>
@@ -353,8 +355,10 @@ const LandingPage = ({ navigate, onRegisterClick }) => {
                 </div>
             </section>
 
-
-<section className="py-20 bg-gray-50">
+<section
+  id="contact"
+  className="pt-10 pb-20 bg-slate-50"
+>
   <div className="max-w-3xl mx-auto text-center px-6">
 
     <h2 className="text-4xl font-bold text-gray-900">
@@ -371,7 +375,7 @@ const LandingPage = ({ navigate, onRegisterClick }) => {
       <button
         onClick={() =>
           window.open(
-            "mailto:contact@ekkkadamfoundation.org",
+            "mailto:ekkadam.info@gmail.com",
             "_blank"
           )
         }
@@ -390,7 +394,7 @@ const LandingPage = ({ navigate, onRegisterClick }) => {
       <button
         onClick={() =>
           window.open(
-            "https://wa.me/91XXXXXXXXXX",
+            "https://wa.me/919299458901",
             "_blank"
           )
         }
@@ -423,6 +427,26 @@ const LandingPage = ({ navigate, onRegisterClick }) => {
           Instagram
         </span>
       </button>
+
+
+
+      <button
+  onClick={() =>
+    window.open(
+      "https://www.youtube.com/@EkkkadamFoundation",
+      "_blank"
+    )
+  }
+  className="group flex flex-col items-center"
+>
+  <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-red-200">
+    <FaYoutube size={28} className="text-red-600" />
+  </div>
+
+  <span className="mt-3 font-medium text-gray-700">
+    YouTube
+  </span>
+</button>
 
     </div>
 
@@ -470,14 +494,17 @@ const LandingPage = ({ navigate, onRegisterClick }) => {
                                     Contact
                                 </a>
                             </li>
+
+
+                            
                         </ul>
                     </div>
                     <div>
                         <h4 className="text-white font-bold mb-4">Contact Us</h4>
                         <ul className="space-y-2">
                             <li className="flex items-center gap-2"><MapPin size={16} /> Hyderabad, India</li>
-                            <li className="flex items-center gap-2"><Mail size={16} /> contact@ekkkadam.org</li>
-                            <li className="flex items-center gap-2"><Phone size={16} /> +91 98765 43210</li>
+                            <li className="flex items-center gap-2"><Mail size={16} /> ekkadam.info@gmail.com</li>
+                            <li className="flex items-center gap-2"><Phone size={16} /> +91 92994 58901</li>
                         </ul>
                     </div>
                 </div>

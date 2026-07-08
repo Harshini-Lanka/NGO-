@@ -17,10 +17,15 @@ export const getVolunteerDashboard = async (req, res) => {
       status: "Pending",
     });
 
-    const certificates = await Registration.countDocuments({
-      user: req.user._id,
-      status: "Approved",
-    });
+   const registrations = await Registration.find({
+  user: req.user._id,
+  status: "Approved",
+  attendanceStatus: "Present",
+}).populate("event");
+
+const certificates = registrations.filter(
+  (reg) => reg.event && reg.event.status === "Completed"
+).length;
 
     res.json({
       success: true,
