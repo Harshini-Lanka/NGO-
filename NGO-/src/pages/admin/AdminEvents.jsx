@@ -171,13 +171,14 @@ const AdminEvents = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
                 <h1 className="text-3xl font-bold">
                     Event Management
                 </h1>
 
                 <Button
+                    className="w-full sm:w-auto"
                     onClick={() => {
 
                         setEditingEvent(null);
@@ -193,87 +194,83 @@ const AdminEvents = () => {
             <div className="grid gap-4">
 
                 {events.map(event => (<Card
-  key={event._id}
-  className="p-6 rounded-3xl shadow-sm hover:shadow-lg transition-all"
->
-  <div className="flex items-center justify-between">
+                    key={event._id}
+                    className="p-5 rounded-3xl shadow-sm hover:shadow-lg transition-all"
+                >
+                    <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-5">
 
-    {/* Left Side */}
-    <div className="space-y-3">
+                        {/* Event Details */}
+                        <div className="flex-1">
 
-      <div className="flex items-center gap-3">
+                            <div className="flex flex-wrap items-center gap-2">
 
-        <h2 className="text-2xl font-bold text-gray-900">
-          {event.title}
-        </h2>
+                                <h2 className="text-2xl font-bold text-gray-900">
+                                    {event.title}
+                                </h2>
 
-        <Badge type="primary">
-          {event.category}
-        </Badge>
+                                <Badge type="primary">
+                                    {event.category}
+                                </Badge>
 
-      </div>
+                            </div>
 
-      <div className="flex items-center gap-6 text-gray-600 text-sm">
+                            <div className="flex flex-wrap items-center gap-4 mt-3 text-gray-600 text-sm">
 
-        <div className="flex items-center gap-2">
-          <MapPin size={16} />
-          {event.location}
-        </div>
+                                <div className="flex items-center gap-2">
+                                    <MapPin size={16} />
+                                    {event.location}
+                                </div>
 
-        <div className="flex items-center gap-2">
-          <Calendar size={16} />
-          {new Date(event.date).toLocaleDateString()}
-        </div>
+                                <div className="flex items-center gap-2">
+                                    <Calendar size={16} />
+                                    {new Date(event.date).toLocaleDateString()}
+                                </div>
 
-      </div>
+                            </div>
 
-      <p className="text-gray-500 max-w-3xl">
-        {event.description}
-      </p>
+                            <p className="text-gray-500 mt-3">
+                                {event.description}
+                            </p>
 
-    </div>
+                        </div>
 
-    {/* Right Side */}
-    <div className="flex items-center gap-3">
+                        {/* Buttons */}
+                        <div className="flex flex-wrap gap-2 lg:justify-end">
 
-      <Button
-        variant="outline"
-        onClick={() => handleEdit(event)}
-        className="border-[#FF8C42] text-[#FF8C42] hover:bg-[#FF8C42] hover:text-white px-5"
-      >
-        <Edit size={16} className="mr-2" />
-        Edit
-      </Button>
+                            <Button
+                                variant="outline"
+                                onClick={() => handleEdit(event)}
+                                className="border-[#FF8C42] text-[#FF8C42] hover:bg-[#FF8C42] hover:text-white"
+                            >
+                                <Edit size={16} className="mr-2" />
+                                Edit
+                            </Button>
 
-      <Button
-        onClick={() => handleDelete(event._id)}
-        className="bg-red-500 hover:bg-red-600 text-white px-5"
-      >
-        <Trash2 size={16} className="mr-2" />
-        Delete
-      </Button>
+                            <Button
+                                onClick={() => handleDelete(event._id)}
+                                className="bg-red-500 hover:bg-red-600 text-white"
+                            >
+                                <Trash2 size={16} className="mr-2" />
+                                Delete
+                            </Button>
 
-      {event.status !== "Completed" ? (
+                            {event.status !== "Completed" ? (
+                                <Button
+                                    onClick={() => handleComplete(event._id)}
+                                    className="bg-green-600 hover:bg-green-700 text-white"
+                                >
+                                    Complete
+                                </Button>
+                            ) : (
+                                <Badge type="success">
+                                    ✓ Completed
+                                </Badge>
+                            )}
 
-        <Button
-          onClick={() => handleComplete(event._id)}
-          className="bg-green-600 hover:bg-green-700 text-white px-5"
-        >
-          Complete
-        </Button>
+                        </div>
 
-      ) : (
-
-        <Badge type="success">
-          ✓ Completed
-        </Badge>
-
-      )}
-
-    </div>
-
-  </div>
-</Card>
+                    </div>
+                </Card>
 
 
                 ))}
@@ -351,7 +348,7 @@ const AdminEvents = () => {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                                 <div>
                                     <label>Location</label>

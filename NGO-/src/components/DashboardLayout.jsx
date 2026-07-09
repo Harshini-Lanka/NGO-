@@ -81,26 +81,61 @@ const DashboardLayout = ({ user, logout, children, menuItems, activeTab, setActi
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 md:hidden flex">
           <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)}></div>
-          <aside className="relative w-64 bg-white h-full flex flex-col animate-slide-in-right">
-            <div className="p-6 flex items-center justify-between">
+          <aside className="relative w-64 h-dvh bg-white flex flex-col animate-slide-in-right">
+
+            {/* Header */}
+            <div className="p-6 flex items-center justify-between border-b border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#FF8C42] flex items-center justify-center text-white font-bold">EK</div>
-                <span className="font-bold text-gray-800">Ekk Kadam</span>
+                <div className="w-8 h-8 rounded-lg bg-[#FF8C42] flex items-center justify-center text-white font-bold">
+                  EK
+                </div>
+                <span className="font-bold text-gray-800">
+                  Ekk Kadam
+                </span>
               </div>
-              <button onClick={() => setMobileMenuOpen(false)} className="text-gray-500"><X size={20} /></button>
+
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-gray-500"
+              >
+                <X size={20} />
+              </button>
             </div>
-            <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
+
+            {/* Menu */}
+            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-2">
               {menuItems.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => { setActiveTab(item.id); setMobileMenuOpen(false); }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium
-                    ${activeTab === item.id ? 'bg-orange-50 text-[#FF8C42]' : 'text-gray-600'}`}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${activeTab === item.id
+                      ? "bg-orange-50 text-[#FF8C42]"
+                      : "text-gray-600 hover:bg-gray-50"
+                    }`}
                 >
-                  <item.icon size={20} /> {item.label}
+                  <item.icon size={20} />
+                  {item.label}
                 </button>
               ))}
             </div>
+
+            {/* Logout */}
+            <div className="border-t border-gray-200 p-4">
+              <button
+                onClick={() => {
+                  logout();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors font-medium"
+              >
+                <LogOut size={20} />
+                Logout
+              </button>
+            </div>
+
           </aside>
         </div>
       )}
